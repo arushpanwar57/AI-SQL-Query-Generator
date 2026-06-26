@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+.env
+
+# Node
+node_modules/
+dist/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Build
+coverage/
+.pytest_cache/
+
+# Environment
+.env.*
+!.env.example
+
+# Python virtual environments
+backend/venv/
+frontend/venv/
+
+# SQLite database
+*.db
+*.sqlite3
+
+# Python cache
+**/__pycache__/
