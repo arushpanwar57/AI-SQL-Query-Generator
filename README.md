@@ -1,6 +1,6 @@
 # AI SQL Query Generator & Database Assistant
 
-A production-grade, enterprise-ready AI-powered SQL query generator and database assistant. Built with **Clean Architecture** principles using FastAPI, React (TypeScript), Tailwind CSS, Monaco SQL Editor, and Google Gemini API.
+A production-grade, enterprise-ready AI-powered SQL query generator and database assistant. Built with **Clean Architecture** principles using FastAPI, React (TypeScript), Tailwind CSS, Monaco SQL Editor, and OpenRouter API.
 
 This application translates natural language requirements into valid SQL queries, explains them in simple English, performs database-level EXPLAIN syntax validations, runs security reviews (guarding against destructive changes), performs impact analysis, suggests optimizations, and executes queries within transaction blocks on target PostgreSQL or MySQL engines.
 
@@ -35,7 +35,7 @@ This application translates natural language requirements into valid SQL queries
 Every natural language query goes through a strict multi-stage pipeline before execution:
 
 - **Schema Reflection**: Inspects structural metadata tables, columns, constraints and relations, protecting data privacy.
-- **Gemini SQL Generation**: Configurable provider translating natural language prompts.
+- **OpenRouter SQL Generation**: Configurable provider translating natural language prompts.
 - **Syntax Validation**: Safely executes EXPLAIN queries to verify syntax.
 - **Safety Checks**: Sweeps queries for destructive actions lacking WHERE clauses.
 - **Impact Analysis**: Generates database modification risks (Low/Medium/High/Critical).
@@ -133,9 +133,10 @@ d:\DBMS_SQL_ Query_generator\
    ```bash
    cp .env.example .env
    ```
-3. **Configure the Gemini API Key**: Open `.env` and fill in your Google Gemini API key:
+3. **Configure the OpenRouter API Key**: Open `.env` and fill in your OpenRouter API key and desired model:
    ```env
-   GEMINI_API_KEY=your_google_gemini_api_key_here
+   OPENROUTER_API_KEY=your_openrouter_api_key_here
+   OPENROUTER_MODEL=google/gemini-2.5-flash
    ```
    *Note: If no API key is specified, the application automatically falls back to an offline rule-based Mock Generator, allowing immediate local testing.*
 4. **Choose Execution Path**:

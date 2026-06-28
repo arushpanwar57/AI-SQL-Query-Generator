@@ -21,8 +21,9 @@ services:
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/sql_assistant
       - SECRET_KEY=SUPER_SECRET_SECURITY_KEY_FOR_JWT_SIGNING_1234567890
-      - AI_PROVIDER=gemini
-      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - AI_PROVIDER=openrouter
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
+      - OPENROUTER_MODEL=${OPENROUTER_MODEL:-google/gemini-2.5-flash}
     ports:
       - "8000:8000"
     depends_on:

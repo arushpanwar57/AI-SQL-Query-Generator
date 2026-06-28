@@ -21,8 +21,9 @@ class Settings(BaseSettings):
     )
     
     # AI configuration
-    AI_PROVIDER: str = Field(default="gemini", env="AI_PROVIDER")  # "gemini" or "mock"
-    GEMINI_API_KEY: str = Field(default="", env="GEMINI_API_KEY")
+    AI_PROVIDER: str = Field(default="openrouter", env="AI_PROVIDER")  # "openrouter" or "mock"
+    OPENROUTER_API_KEY: str = Field(default="", env="OPENROUTER_API_KEY")
+    OPENROUTER_MODEL: str = Field(default="google/gemini-2.5-flash", env="OPENROUTER_MODEL")
     
     # CORS
     BACKEND_CORS_ORIGINS: List[str] = ["*"]
