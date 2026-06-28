@@ -30,8 +30,10 @@ You can use either **Neon** or **Supabase** to get a permanently free PostgreSQL
 3. Once the project dashboard finishes loading, click the **Connect** button in the top header menu.
 4. Select the **Connection Pooler** option, set the Mode to **Transaction**, and copy the connection string URI.
    > [!IMPORTANT]
-   > You **must** use the Connection Pooler (which runs on port **6543**). Do not use the direct connection on port **5432**. Render's network routing does not support outbound IPv6, so connecting directly to port 5432 will fail with a `Network is unreachable` error.
-5. Replace the `[YOUR-PASSWORD]` placeholder in the URI string with your actual database password.
+   > You **must** use the Connection Pooler. The connection pooler has a **different hostname** (typically ending in `.pooler.supabase.com`) and a **different username format** (typically `postgres.[your-project-ref]`) compared to the direct connection. 
+   > 
+   > Simply changing the port to `6543` on the direct connection host (`db.[your-project-ref].supabase.co`) **will not work** because that host only resolves to an IPv6 address, which Render cannot reach.
+5. Replace the `[YOUR-PASSWORD]` placeholder in the pooler URI string with your actual database password.
 
 ---
 
