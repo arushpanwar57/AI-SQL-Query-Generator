@@ -28,8 +28,10 @@ You can use either **Neon** or **Supabase** to get a permanently free PostgreSQL
 1. Go to [Supabase.com](https://supabase.com/) and sign up for a free account.
 2. Create a new project. Set a secure database password and choose your region.
 3. Once the project dashboard finishes loading, click the **Connect** button in the top header menu.
-4. Under connection options, copy the **Connection String** (URI format). (Ensure you select a Connection Pooler or Direct Connection string depending on your deployment needs).
-5. Replace the `[YOUR-PASSWORD]` placeholder with the actual database password you configured during setup.
+4. Select the **Connection Pooler** option, set the Mode to **Transaction**, and copy the connection string URI.
+   > [!IMPORTANT]
+   > You **must** use the Connection Pooler (which runs on port **6543**). Do not use the direct connection on port **5432**. Render's network routing does not support outbound IPv6, so connecting directly to port 5432 will fail with a `Network is unreachable` error.
+5. Replace the `[YOUR-PASSWORD]` placeholder in the URI string with your actual database password.
 
 ---
 
