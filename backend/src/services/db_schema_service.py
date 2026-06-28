@@ -1,6 +1,7 @@
 from sqlalchemy import inspect, text
 from typing import List, Dict, Any, Tuple
 import logging
+from fastapi import HTTPException
 
 from src.core.database import create_target_engine
 from src.schemas.schemas import SchemaResponse, TableMetadata, ColumnMetadata

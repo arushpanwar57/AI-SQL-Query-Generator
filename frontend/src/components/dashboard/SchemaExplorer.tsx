@@ -5,7 +5,11 @@ import { Database, Table, Key, Link as LinkIcon, RefreshCw, Layers, Search, Hash
 
 export const SchemaExplorer: React.FC = () => {
   const [connStr, setConnStr] = useState(() => {
-    return localStorage.getItem('db_connection_string') || 'postgresql://postgres:postgres@db:5432/sql_assistant';
+    const saved = localStorage.getItem('db_connection_string');
+    if (!saved || saved === 'postgresql://postgres:postgres@db:5432/sql_assistant') {
+      return 'sqlite:///./sql_assistant.db';
+    }
+    return saved;
   });
   
   const [schema, setSchema] = useState<SchemaResponse | null>(null);
