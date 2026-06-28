@@ -119,3 +119,10 @@ export interface DashboardStats {
   queries_by_day: { date: string; count: number }[];
   top_users: { username: string; count: number }[];
 }
+
+export interface Token {
+  access_token: string;
+  refresh_token: string;
+  token_type: string;
+  role: string;
+}
