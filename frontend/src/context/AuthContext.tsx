@@ -63,6 +63,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoading(true);
     try {
       await authAPI.register(data);
+    } catch (err) {
+      throw err;
     } finally {
       setLoading(false);
     }
