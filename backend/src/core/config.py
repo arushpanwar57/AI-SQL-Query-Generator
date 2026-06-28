@@ -21,18 +21,26 @@ class Settings(BaseSettings):
     )
     
     # AI configuration
-    AI_PROVIDER: str = Field(default="gemini", env="AI_PROVIDER")  # "gemini" or "mock"
-    GEMINI_API_KEY: str = Field(default="", env="GEMINI_API_KEY")
+    AI_PROVIDER: str = Field(default="openrouter", env="AI_PROVIDER")  # "openrouter" or "mock"
+    OPENROUTER_API_KEY: str = Field(default="", env="OPENROUTER_API_KEY")
+    OPENROUTER_MODEL: str = Field(default="google/gemini-2.5-flash", env="OPENROUTER_MODEL")
     
     # CORS
-    BACKEND_CORS_ORIGINS: List[str] = ["*"]
+    BACKEND_CORS_ORIGINS: Any = ["*"]
 
     @field_validator("BACKEND_CORS_ORIGINS", mode="before")
     @classmethod
     def assemble_cors_origins(cls, v: Any) -> Any:
-        if isinstance(v, str) and not v.startswith("["):
-            return [i.strip() for i in v.split(",")]
-        elif isinstance(v, (list, str)):
+        if isinstance(v, str):
+            if not v.startswith("["):
+                return [i.strip() for i in v.split(",")]
+            else:
+                import json
+                try:
+                    return json.loads(v)
+                except Exception:
+                    return [v]
+        elif isinstance(v, list):
             return v
         raise ValueError(v)
     

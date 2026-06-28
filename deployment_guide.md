@@ -27,8 +27,13 @@ You can use either **Neon** or **Supabase** to get a permanently free PostgreSQL
 #### Option B: Supabase
 1. Go to [Supabase.com](https://supabase.com/) and sign up for a free account.
 2. Create a new project. Set a secure database password and choose your region.
-3. Once the project is ready, navigate to **Project Settings** -> **Database**.
-4. Under Connection String, select the **URI** tab, copy the URL, and replace `[YOUR-PASSWORD]` with your actual database password.
+3. Once the project dashboard finishes loading, click the **Connect** button in the top header menu.
+4. Select the **Connection Pooler** option, set the Mode to **Transaction**, and copy the connection string URI.
+   > [!IMPORTANT]
+   > You **must** use the Connection Pooler. The connection pooler has a **different hostname** (typically ending in `.pooler.supabase.com`) and a **different username format** (typically `postgres.[your-project-ref]`) compared to the direct connection. 
+   > 
+   > Simply changing the port to `6543` on the direct connection host (`db.[your-project-ref].supabase.co`) **will not work** because that host only resolves to an IPv6 address, which Render cannot reach.
+5. Replace the `[YOUR-PASSWORD]` placeholder in the pooler URI string with your actual database password.
 
 ---
 
@@ -48,8 +53,9 @@ Render offers a free tier for web applications that is perfect for hosting the A
 5. Click **Advanced** and add the following **Environment Variables**:
    - `DATABASE_URL`: *The connection string copied in Step 1*
    - `SECRET_KEY`: *A random security string (e.g. `7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c`)*
-   - `AI_PROVIDER`: `gemini` (or `mock` to run offline without a Gemini key)
-   - `GEMINI_API_KEY`: *Your Google Gemini API key* (leave blank if running in `mock` mode)
+   - `AI_PROVIDER`: `openrouter` (or `mock` to run offline without an OpenRouter key)
+   - `OPENROUTER_API_KEY`: *Your OpenRouter API key* (leave blank if running in `mock` mode)
+   - `OPENROUTER_MODEL`: `google/gemini-2.5-flash` (or your preferred OpenRouter model)
    - `BACKEND_CORS_ORIGINS`: `https://your-app-name.vercel.app` (This is your frontend Vercel URL. You can temporarily set it to `*` and restrict it later once your Vercel deployment finishes)
 6. Click **Create Web Service**. 
 7. Once deployed, copy your service's URL (e.g., `https://sql-assistant-api.onrender.com`).

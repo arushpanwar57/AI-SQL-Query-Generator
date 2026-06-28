@@ -1,8 +1,24 @@
 # AI SQL Query Generator & Database Assistant
 
-A production-grade, enterprise-ready AI-powered SQL query generator and database assistant. Built with **Clean Architecture** principles using FastAPI, React (TypeScript), Tailwind CSS, Monaco SQL Editor, and Google Gemini API.
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-black?logo=vercel&style=for-the-badge)](https://ai-sql-query-generator-gamma.vercel.app/)
+[![API Docs](https://img.shields.io/badge/API%20Docs-Swagger-green?logo=fastapi&style=for-the-badge)](https://ai-sql-query-generator-wn6r.onrender.com/docs)
+[![Backend](https://img.shields.io/badge/Backend-Render-purple?logo=render&style=for-the-badge)](https://ai-sql-query-generator-wn6r.onrender.com)
+
+A production-grade, enterprise-ready AI-powered SQL query generator and database assistant. Built with **Clean Architecture** principles using FastAPI, React (TypeScript), Tailwind CSS, Monaco SQL Editor, and OpenRouter API.
 
 This application translates natural language requirements into valid SQL queries, explains them in simple English, performs database-level EXPLAIN syntax validations, runs security reviews (guarding against destructive changes), performs impact analysis, suggests optimizations, and executes queries within transaction blocks on target PostgreSQL or MySQL engines.
+
+---
+
+## 🌐 Live Deployment
+
+| Service | URL |
+|---------|-----|
+| **Frontend (Vercel)** | https://ai-sql-query-generator-gamma.vercel.app/ |
+| **Backend API (Render)** | https://ai-sql-query-generator-wn6r.onrender.com |
+| **API Swagger Docs** | https://ai-sql-query-generator-wn6r.onrender.com/docs |
+
+> **Note**: The backend runs on Render's free tier and may take **30–50 seconds** to respond after a period of inactivity (cold start). Subsequent requests will be fast.
 
 ---
 
@@ -35,7 +51,7 @@ This application translates natural language requirements into valid SQL queries
 Every natural language query goes through a strict multi-stage pipeline before execution:
 
 - **Schema Reflection**: Inspects structural metadata tables, columns, constraints and relations, protecting data privacy.
-- **Gemini SQL Generation**: Configurable provider translating natural language prompts.
+- **OpenRouter SQL Generation**: Configurable provider translating natural language prompts.
 - **Syntax Validation**: Safely executes EXPLAIN queries to verify syntax.
 - **Safety Checks**: Sweeps queries for destructive actions lacking WHERE clauses.
 - **Impact Analysis**: Generates database modification risks (Low/Medium/High/Critical).
@@ -53,7 +69,7 @@ Every natural language query goes through a strict multi-stage pipeline before e
 ## Folder Structure
 
 ```
-d:\DBMS_SQL_ Query_generator\
+AI-SQL-Query-Generator/
 ├── backend/
 │   ├── Dockerfile
 │   ├── requirements.txt
@@ -71,7 +87,7 @@ d:\DBMS_SQL_ Query_generator\
 │       └── services/              # AI generators, Schema reflection, Executors
 ├── frontend/
 │   ├── Dockerfile
-│   ├── nginx.conf                 # Production Nginx reverse-proxy rules
+│   ├── vercel.json                # Vercel SPA routing config
 │   ├── package.json
 │   ├── tailwind.config.js
 │   ├── tsconfig.json
@@ -86,6 +102,7 @@ d:\DBMS_SQL_ Query_generator\
 │       ├── context/               # AuthContext & ThemeContext
 │       └── components/            # Layouts, Monaco wrappers, dashboards, auth
 ├── docker-compose.yml
+├── deployment_guide.md
 ├── .env.example
 └── README.md
 ```
@@ -133,9 +150,10 @@ d:\DBMS_SQL_ Query_generator\
    ```bash
    cp .env.example .env
    ```
-3. **Configure the Gemini API Key**: Open `.env` and fill in your Google Gemini API key:
+3. **Configure the OpenRouter API Key**: Open `.env` and fill in your OpenRouter API key and desired model:
    ```env
-   GEMINI_API_KEY=your_google_gemini_api_key_here
+   OPENROUTER_API_KEY=your_openrouter_api_key_here
+   OPENROUTER_MODEL=google/gemini-2.5-flash
    ```
    *Note: If no API key is specified, the application automatically falls back to an offline rule-based Mock Generator, allowing immediate local testing.*
 4. **Choose Execution Path**:

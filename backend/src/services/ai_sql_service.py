@@ -1,9 +1,8 @@
 import json
 import logging
 import re
+import httpx
 from typing import Dict, Any, List
-from google import genai
-from google.genai import types
 
 from src.core.config import settings
 from src.services.db_schema_service import db_schema_service
@@ -14,11 +13,11 @@ class BaseAIProvider:
     def generate_sql(self, prompt: str, schema_text: str) -> Dict[str, Any]:
         raise NotImplementedError
 
-class GeminiProvider(BaseAIProvider):
-    def __init__(self, api_key: str):
+class OpenRouterProvider(BaseAIProvider):
+    def __init__(self, api_key: str, model: str):
         self.api_key = api_key
-        # Initialize Google GenAI client
-        self.client = genai.Client(api_key=self.api_key)
+        self.model = model
+        self.url = "https://openrouter.ai/api/v1/chat/completions"
 
     def generate_sql(self, prompt: str, schema_text: str) -> Dict[str, Any]:
         system_instruction = f"""
@@ -48,22 +47,42 @@ Strict Rules:
 Respond ONLY with the JSON object. Do not wrap in ```json ... ``` markdown tags.
 """
 
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json",
+            "HTTP-Referer": "https://github.com/ManasNautiyal/AI-SQL-Query-Generator",
+            "X-Title": "AI SQL Query Generator"
+        }
+        
+        payload = {
+            "model": self.model,
+            "messages": [
+                {"role": "system", "content": system_instruction.strip()},
+                {"role": "user", "content": f"User request: {prompt}\nGenerate the JSON output matching the requested schema."}
+            ],
+            "response_format": {"type": "json_object"}
+        }
+
         try:
-            response = self.client.models.generate_content(
-                model="gemini-1.5-flash",
-                contents=f"User request: {prompt}\nGenerate the JSON output matching the requested schema.",
-                config=types.GenerateContentConfig(
-                    system_instruction=system_instruction,
-                    response_mime_type="application/json"
-                )
-            )
-            raw_text = response.text.strip()
-            # Parse the JSON output
-            data = json.loads(raw_text)
-            return data
+            with httpx.Client(timeout=30.0) as client:
+                response = client.post(self.url, headers=headers, json=payload)
+                response.raise_for_status()
+                result = response.json()
+                
+                if "error" in result:
+                    raise RuntimeError(result["error"])
+                
+                raw_text = result["choices"][0]["message"]["content"].strip()
+                if raw_text.startswith("```"):
+                    raw_text = re.sub(r"^```(?:json)?\n?", "", raw_text)
+                    raw_text = re.sub(r"\n?```$", "", raw_text)
+                    raw_text = raw_text.strip()
+                    
+                data = json.loads(raw_text)
+                return data
         except Exception as e:
-            logger.error(f"Gemini API execution failed: {e}. Falling back to default parser.")
-            raise RuntimeError(f"Gemini API request failed: {e}")
+            logger.error(f"OpenRouter API execution failed: {e}")
+            raise RuntimeError(f"OpenRouter API request failed: {e}")
 
 
 class MockAIProvider(BaseAIProvider):
@@ -227,13 +246,14 @@ class AISqlService:
         if self._provider is None:
             # Check configured provider
             provider_type = settings.AI_PROVIDER.lower()
-            api_key = settings.GEMINI_API_KEY
+            api_key = settings.OPENROUTER_API_KEY
+            model = settings.OPENROUTER_MODEL
             
-            if provider_type == "gemini" and api_key:
-                logger.info("Initializing Google Gemini AI Provider.")
-                self._provider = GeminiProvider(api_key)
+            if provider_type == "openrouter" and api_key:
+                logger.info(f"Initializing OpenRouter AI Provider with model: {model}.")
+                self._provider = OpenRouterProvider(api_key, model)
             else:
-                logger.warning("Gemini key is missing or provider is configured to 'mock'. Falling back to local Mock Provider.")
+                logger.warning("OpenRouter API key is missing or provider is configured to 'mock'. Falling back to local Mock Provider.")
                 self._provider = MockAIProvider()
         return self._provider
 
