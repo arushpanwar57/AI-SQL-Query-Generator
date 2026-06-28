@@ -9,17 +9,33 @@ from src.core.database import Base, engine
 from src.core.limiter import limiter
 from src.api import auth, generator, schema, admin, history
 
-# Initialize SQLite/PostgreSQL main database tables on startup
-Base.metadata.create_all(bind=engine)
+# Initialize SQLite/PostgreSQL main database tables on startup with retry logic
+import time
+import logging
 
-# Seed sample business tables for immediate testing/metadata reflections
-from src.core.database import SessionLocal
-from src.core.seed import seed_sample_business_data
-db = SessionLocal()
-try:
-    seed_sample_business_data(db)
-finally:
-    db.close()
+logger = logging.getLogger("main")
+max_retries = 5
+retry_delay = 5
+for attempt in range(1, max_retries + 1):
+    try:
+        Base.metadata.create_all(bind=engine)
+        
+        # Seed sample business tables for immediate testing/metadata reflections
+        from src.core.database import SessionLocal
+        from src.core.seed import seed_sample_business_data
+        db = SessionLocal()
+        try:
+            seed_sample_business_data(db)
+        finally:
+            db.close()
+        logger.info("Database initialized and seeded successfully.")
+        break
+    except Exception as e:
+        if attempt == max_retries:
+            logger.error(f"Database connection failed after {max_retries} attempts. Exiting.")
+            raise e
+        logger.warning(f"Database connection attempt {attempt}/{max_retries} failed. Retrying in {retry_delay}s... (Error: {e})")
+        time.sleep(retry_delay)
 
 
 app = FastAPI(

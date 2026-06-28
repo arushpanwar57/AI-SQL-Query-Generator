@@ -213,7 +213,7 @@ export const AdminDashboard: React.FC = () => {
                 <div className="space-y-2 shrink-0 pr-6">
                   {pieData.map((d, i) => (
                     <div key={i} className="flex items-center gap-2 text-xs">
-                      <span className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[i % COLORS.COLORS.length] || COLORS[0] }}></span>
+                      <span className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[i % COLORS.length] || COLORS[0] }}></span>
                       <span className="font-semibold text-slate-600 dark:text-slate-300">{d.name}:</span>
                       <span className="font-bold text-slate-800 dark:text-white">{d.value}</span>
                     </div>

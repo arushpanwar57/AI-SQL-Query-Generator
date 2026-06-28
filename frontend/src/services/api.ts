@@ -4,8 +4,10 @@ import {
   QueryExecuteResponse, DashboardStats, AuditLogEntry, UserSessionEntry, HistoryItem 
 } from '../types';
 
+const baseURL = import.meta.env.VITE_API_URL || '';
+
 const api = axios.create({
-  baseURL: '',
+  baseURL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -35,7 +37,7 @@ api.interceptors.response.use(
       
       if (refreshToken) {
         try {
-          const res = await axios.post<Token>(`/api/auth/refresh?refresh_token=${refreshToken}`);
+          const res = await axios.post<Token>(`${baseURL}/api/auth/refresh?refresh_token=${refreshToken}`);
           const { access_token } = res.data;
           
           localStorage.setItem('access_token', access_token);
