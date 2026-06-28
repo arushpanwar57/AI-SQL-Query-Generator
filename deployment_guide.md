@@ -27,8 +27,9 @@ You can use either **Neon** or **Supabase** to get a permanently free PostgreSQL
 #### Option B: Supabase
 1. Go to [Supabase.com](https://supabase.com/) and sign up for a free account.
 2. Create a new project. Set a secure database password and choose your region.
-3. Once the project is ready, navigate to **Project Settings** -> **Database**.
-4. Under Connection String, select the **URI** tab, copy the URL, and replace `[YOUR-PASSWORD]` with your actual database password.
+3. Once the project dashboard finishes loading, click the **Connect** button in the top header menu.
+4. Under connection options, copy the **Connection String** (URI format). (Ensure you select a Connection Pooler or Direct Connection string depending on your deployment needs).
+5. Replace the `[YOUR-PASSWORD]` placeholder with the actual database password you configured during setup.
 
 ---
 
